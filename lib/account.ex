@@ -16,11 +16,11 @@ defmodule ExBanking.Account do
 
   ## Examples
 
-      iex> ExBanking.Account.create_user("Anna")
+      iex> Account.create_user("Anna")
       :ok
 
-      iex> ExBanking.Account.create_user("Olivia")
-      ...> ExBanking.Account.create_user("Olivia")
+      iex> Account.create_user("Olivia")
+      ...> Account.create_user("Olivia")
       {:error, :user_already_exists}
 
   """
@@ -38,11 +38,11 @@ defmodule ExBanking.Account do
 
   ## Examples
 
-      iex> ExBanking.Account.create_user("Tod")
-      iex> ExBanking.Account.get_balance("Tod", "USD")
+      iex> Account.create_user("Tod")
+      iex> Account.get_balance("Tod", "USD")
       {:ok, 0}
 
-      iex> ExBanking.Account.get_balance("Santa Claus", "USD")
+      iex> Account.get_balance("Santa Claus", "USD")
       {:error, :user_does_not_exist}
 
   """

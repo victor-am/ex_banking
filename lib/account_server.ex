@@ -36,11 +36,11 @@ defmodule ExBanking.AccountServer do
 
   ## Examples
 
-      iex> {:ok, pid} = ExBanking.AccountServer.spawn_account("Sophie")
+      iex> {:ok, pid} = AccountServer.spawn_account("Sophie")
       ...> is_pid(pid)
       true
 
-      iex> ExBanking.AccountServer.spawn_account("Mary")
+      iex> AccountServer.spawn_account("Mary")
       ...> {:error, {:already_started, pid}} = ExBanking.AccountServer.spawn_account("Mary")
       ...> is_pid(pid)
       true
@@ -59,8 +59,8 @@ defmodule ExBanking.AccountServer do
 
   ## Examples
 
-      iex> ExBanking.AccountServer.spawn_account("Lara")
-      ...> ExBanking.AccountServer.call("Lara", {:get_balance, "USD"})
+      iex> AccountServer.spawn_account("Lara")
+      ...> AccountServer.call("Lara", {:get_balance, "USD"})
       {:ok, 0}
 
   """
