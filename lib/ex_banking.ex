@@ -61,14 +61,51 @@ defmodule ExBanking do
   def get_balance(user, currency) do
     case Account.get_balance(user, currency) do
       {:ok, balance} ->
-        {:ok, balance_as_decimal(balance)}
+        {:ok, money_to_decimal(balance)}
 
       {:error, message} ->
         {:error, message}
     end
   end
 
-  defp balance_as_decimal(integer_amount) do
+  @doc """
+  Adds the given amount of money from the given currency to the specified user account.
+
+  Returns `{:ok, balance}`
+
+  ## Examples
+
+      iex> ExBanking.create_user("Evan")
+      ...> ExBanking.deposit("Evan", 10.42, "USD")
+      {:ok, 10.42}
+
+      iex> ExBanking.deposit("Santa Claus", 10.50, "USD")
+      {:error, :user_does_not_exist}
+
+  """
+  @spec deposit(user :: String.t(), amount :: number, currency :: String.t()) ::
+          {:ok, new_balance :: number} | banking_error
+  def deposit(user, amount, currency) do
+    case Account.deposit(user, money_to_integer(amount), currency) do
+      {:ok, balance} ->
+        {:ok, money_to_decimal(balance)}
+
+      {:error, message} ->
+        {:error, message}
+    end
+  end
+
+  defp money_to_decimal(integer_amount) do
     integer_amount / 100
+  end
+
+  defp money_to_integer(amount) when is_float(amount) do
+    amount
+    |> Kernel.*(100)
+    |> trunc()
+  end
+
+  defp money_to_integer(amount) when is_integer(amount) do
+    amount * 100
   end
 end

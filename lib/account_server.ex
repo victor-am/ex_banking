@@ -30,6 +30,17 @@ defmodule ExBanking.AccountServer do
   end
 
   @doc """
+  Callback from GenServer implementing the deposit logic.
+  More information on the AccountServer.call function documentation.
+  """
+  @impl GenServer
+  def handle_call({:deposit, amount, currency}, _from, state) do
+    balance = state[currency] || 0
+    new_state = %{currency => balance + amount}
+    {:reply, {:ok, new_state[currency]}, new_state}
+  end
+
+  @doc """
   Spawns a new AccountServer GenServer under the AccountsSupervisor.
 
   Returns `{:ok, #PID<...>}`
@@ -62,6 +73,10 @@ defmodule ExBanking.AccountServer do
       iex> AccountServer.spawn_account("Lara")
       ...> AccountServer.call("Lara", {:get_balance, "USD"})
       {:ok, 0}
+
+      iex> AccountServer.spawn_account("Francis")
+      ...> AccountServer.call("Francis", {:deposit, 100, "USD"})
+      {:ok, 100}
 
   """
   def call(user, action_options) do

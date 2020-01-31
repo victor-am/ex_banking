@@ -23,4 +23,16 @@ defmodule ExBankingTest do
       assert ExBanking.get_balance("Santa Claus", "USD") == {:error, :user_does_not_exist}
     end
   end
+
+  describe "deposit/3" do
+    test "it accepts both floats and integers as amounts" do
+      ExBanking.create_user("Julian")
+      assert ExBanking.deposit("Julian", 100, "USD") == {:ok, 100.00}
+      assert ExBanking.deposit("Julian", 1.50, "USD") == {:ok, 101.50}
+    end
+
+    test "it returns an error when the user don't exist" do
+      assert ExBanking.deposit("Santa Claus", 100, "USD") == {:error, :user_does_not_exist}
+    end
+  end
 end
