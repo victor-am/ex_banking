@@ -13,4 +13,15 @@ defmodule AccountTest do
       assert Account.create_user("Eliot") == {:error, :user_already_exists}
     end
   end
+
+  describe "get_balance/2" do
+    test "it returns the balance of the given user" do
+      Account.create_user("Sarah")
+      assert Account.get_balance("Sarah", "USD") == {:ok, 0}
+    end
+
+    test "it returns an error when the user don't exist" do
+      assert Account.get_balance("Santa Claus", "USD") == {:error, :user_does_not_exist}
+    end
+  end
 end

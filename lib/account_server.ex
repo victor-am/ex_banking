@@ -20,6 +20,16 @@ defmodule ExBanking.AccountServer do
   end
 
   @doc """
+  Callback from GenServer implementing the get_balance logic.
+  More information on the AccountServer.call function documentation.
+  """
+  @impl GenServer
+  def handle_call({:get_balance, currency}, _from, state) do
+    balance = state[currency] || 0
+    {:reply, {:ok, balance}, state}
+  end
+
+  @doc """
   Spawns a new AccountServer GenServer under the AccountsSupervisor.
 
   Returns `{:ok, #PID<...>}`
@@ -41,6 +51,32 @@ defmodule ExBanking.AccountServer do
     supervisor = ExBanking.AccountsSupervisor
 
     DynamicSupervisor.start_child(supervisor, child_spec)
+  end
+
+  @doc """
+  Calls the AccountServer process of the given user and returns whatever the the
+  process returns from the given message.
+
+  ## Examples
+
+      iex> ExBanking.AccountServer.spawn_account("Lara")
+      ...> ExBanking.AccountServer.call("Lara", {:get_balance, "USD"})
+      {:ok, 0}
+
+  """
+  def call(user, action_options) do
+    pid = process_id(user)
+
+    if pid do
+      GenServer.call(pid, action_options)
+    else
+      {:error, :process_not_found}
+    end
+  end
+
+  defp process_id(user) do
+    process_name(user)
+    |> Process.whereis()
   end
 
   defp process_name(user) do

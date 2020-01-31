@@ -30,4 +30,27 @@ defmodule ExBanking.Account do
       {:ok, _pid} -> :ok
     end
   end
+
+  @doc """
+  Creates a new AccountServer process using the given name (case-sensitive string),
+  unless there is already a process using the same user name.
+
+  Returns `:ok`
+
+  ## Examples
+
+      iex> ExBanking.Account.create_user("Tod")
+      iex> ExBanking.Account.get_balance("Tod", "USD")
+      {:ok, 0}
+
+      iex> ExBanking.Account.get_balance("Santa Claus", "USD")
+      {:error, :user_does_not_exist}
+
+  """
+  def get_balance(user, currency) do
+    case AccountServer.call(user, {:get_balance, currency}) do
+      {:ok, balance} -> {:ok, balance}
+      {:error, :process_not_found} -> {:error, :user_does_not_exist}
+    end
+  end
 end

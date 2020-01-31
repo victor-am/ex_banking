@@ -40,4 +40,26 @@ defmodule ExBanking do
   def create_user(user) do
     Account.create_user(user)
   end
+
+  @doc """
+  Creates a new user with a given name (case-sensitive string), unless there is
+  already an user with the same name.
+
+  Returns `:ok`
+
+  ## Examples
+
+      iex> ExBanking.create_user("Elton")
+      ...> ExBanking.get_balance("Elton", "USD")
+      {:ok, 0}
+
+      iex> ExBanking.get_balance("Santa Claus", "USD")
+      {:error, :user_does_not_exist}
+
+  """
+  @spec get_balance(user :: String.t(), currency :: String.t()) ::
+          {:ok, balance :: number} | banking_error
+  def get_balance(user, currency) do
+    Account.get_balance(user, currency)
+  end
 end

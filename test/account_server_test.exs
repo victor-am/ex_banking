@@ -21,4 +21,13 @@ defmodule AccountServerTest do
       assert is_pid(pid)
     end
   end
+
+  describe "handle_call/2 => :get_balance" do
+    test "it returns the balance of a user when given the :get_balance message" do
+      state = %{"USD" => 100}
+      message = {:get_balance, "USD"}
+      expected_response = {:reply, {:ok, 100}, %{"USD" => 100}}
+      assert AccountServer.handle_call(message, {}, state) == expected_response
+    end
+  end
 end
