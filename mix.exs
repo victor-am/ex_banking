@@ -19,6 +19,6 @@ defmodule ExBanking.MixProject do
   end
 
   defp deps do
-    []
+    [{:dialyxir, "~> 1.0.0-rc.7", only: [:dev], runtime: false}]
   end
 end
