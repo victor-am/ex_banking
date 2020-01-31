@@ -51,7 +51,7 @@ defmodule ExBanking do
 
       iex> ExBanking.create_user("Elton")
       ...> ExBanking.get_balance("Elton", "USD")
-      {:ok, 0}
+      {:ok, 0.00}
 
       iex> ExBanking.get_balance("Santa Claus", "USD")
       {:error, :user_does_not_exist}
@@ -60,6 +60,16 @@ defmodule ExBanking do
   @spec get_balance(user :: String.t(), currency :: String.t()) ::
           {:ok, balance :: number} | banking_error
   def get_balance(user, currency) do
-    Account.get_balance(user, currency)
+    case Account.get_balance(user, currency) do
+      {:ok, balance} ->
+        {:ok, balance_as_decimal(balance)}
+
+      {:error, message} ->
+        {:error, message}
+    end
+  end
+
+  defp balance_as_decimal(integer_amount) do
+    integer_amount / 100
   end
 end
