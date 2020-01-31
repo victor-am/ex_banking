@@ -42,10 +42,9 @@ defmodule ExBanking do
   end
 
   @doc """
-  Creates a new user with a given name (case-sensitive string), unless there is
-  already an user with the same name.
+  Gets the current amount of money a user has on the given currency.
 
-  Returns `:ok`
+  Returns `{:ok, balance}`
 
   ## Examples
 

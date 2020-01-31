@@ -32,10 +32,9 @@ defmodule ExBanking.Account do
   end
 
   @doc """
-  Creates a new AccountServer process using the given name (case-sensitive string),
-  unless there is already a process using the same user name.
+  Gets the current amount of money a user has on the given currency.
 
-  Returns `:ok`
+  Returns `{:ok, balance}`
 
   ## Examples
 
