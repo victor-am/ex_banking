@@ -76,4 +76,29 @@ defmodule ExBanking.Account do
       {:error, :process_mailbox_is_full} -> {:error, :too_many_requests_to_user}
     end
   end
+
+  @doc """
+  Removes the given amount of money from the given currency from the specified user account.
+
+  Returns `{:ok, balance}`
+
+  ## Examples
+
+      iex> Account.create_user("Marco")
+      ...> Account.deposit("Marco", 100, "USD")
+      ...> Account.withdraw("Marco", 50, "USD")
+      {:ok, 50}
+
+      iex> Account.withdraw("Santa Claus", 1050, "USD")
+      {:error, :user_does_not_exist}
+
+  """
+  def withdraw(user, amount, currency, account_server_module \\ AccountServer) do
+    case account_server_module.call(user, {:withdraw, amount, currency}) do
+      {:ok, balance} -> {:ok, balance}
+      {:error, :process_not_found} -> {:error, :user_does_not_exist}
+      {:error, :process_mailbox_is_full} -> {:error, :too_many_requests_to_user}
+      {:error, :not_enough_money} -> {:error, :not_enough_money}
+    end
+  end
 end

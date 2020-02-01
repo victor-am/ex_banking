@@ -56,10 +56,26 @@ defmodule AccountServerTest do
   end
 
   describe "handle_call/2 => :deposit" do
-    test "it adds the specified amount of money into the users account" do
+    test "it adds the specified amount of money into the user's account" do
       state = %{"USD" => 100}
       message = {:deposit, 100, "USD"}
       expected_response = {:reply, {:ok, 200}, %{"USD" => 200}}
+      assert AccountServer.handle_call(message, {}, state) == expected_response
+    end
+  end
+
+  describe "handle_call/2 => :withdraw" do
+    test "it removes the specified amount of money from the user's account" do
+      state = %{"USD" => 100}
+      message = {:withdraw, 5, "USD"}
+      expected_response = {:reply, {:ok, 95}, %{"USD" => 95}}
+      assert AccountServer.handle_call(message, {}, state) == expected_response
+    end
+
+    test "it returns an error and keeps the balance when the user doesn't have enough money" do
+      state = %{"USD" => 100}
+      message = {:withdraw, 150, "USD"}
+      expected_response = {:reply, {:error, :not_enough_money}, %{"USD" => 100}}
       assert AccountServer.handle_call(message, {}, state) == expected_response
     end
   end

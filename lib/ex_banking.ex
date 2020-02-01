@@ -95,6 +95,34 @@ defmodule ExBanking do
     end
   end
 
+  @doc """
+  Removes the given amount of money from the given currency from the specified user account.
+
+  Returns `{:ok, balance}`
+
+  ## Examples
+
+      iex> ExBanking.create_user("Terry")
+      ...> ExBanking.deposit("Terry", 150.50, "USD")
+      ...> ExBanking.withdraw("Terry", 25.50, "USD")
+      {:ok, 125.0}
+
+      iex> ExBanking.withdraw("Santa Claus", 10.50, "USD")
+      {:error, :user_does_not_exist}
+
+  """
+  @spec withdraw(user :: String.t(), amount :: number, currency :: String.t()) ::
+          {:ok, new_balance :: number} | banking_error
+  def withdraw(user, amount, currency) do
+    case Account.withdraw(user, money_to_integer(amount), currency) do
+      {:ok, balance} ->
+        {:ok, money_to_decimal(balance)}
+
+      {:error, message} ->
+        {:error, message}
+    end
+  end
+
   defp money_to_decimal(integer_amount) do
     integer_amount / 100
   end

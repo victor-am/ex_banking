@@ -42,6 +42,23 @@ defmodule ExBanking.AccountServer do
   end
 
   @doc """
+  Callback from GenServer implementing the withdraw logic.
+  Examples on the AccountServer.call function documentation.
+  """
+  @impl GenServer
+  def handle_call({:withdraw, amount, currency}, _from, state) do
+    balance = state[currency] || 0
+    new_balance = balance - amount
+
+    if new_balance >= 0 do
+      new_state = Map.merge(state, %{currency => new_balance})
+      {:reply, {:ok, new_state[currency]}, new_state}
+    else
+      {:reply, {:error, :not_enough_money}, state}
+    end
+  end
+
+  @doc """
   Spawns a new AccountServer GenServer under the AccountsSupervisor.
 
   Returns `{:ok, #PID<...>}`
@@ -78,6 +95,11 @@ defmodule ExBanking.AccountServer do
       iex> AccountServer.spawn_account("Francis")
       ...> AccountServer.call("Francis", {:deposit, 100, "USD"})
       {:ok, 100}
+
+      iex> AccountServer.spawn_account("Jeff")
+      ...> AccountServer.call("Jeff", {:deposit, 100, "USD"})
+      ...> AccountServer.call("Jeff", {:withdraw, 10, "USD"})
+      {:ok, 90}
 
   """
   def call(user, action_options, process_module \\ Process) do
