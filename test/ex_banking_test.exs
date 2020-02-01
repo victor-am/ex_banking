@@ -53,4 +53,27 @@ defmodule ExBankingTest do
       assert ExBanking.withdraw("Rie", 100.0, "USD") == {:error, :not_enough_money}
     end
   end
+
+  describe "send/4" do
+    test "it accepts both floats and integers as amounts" do
+      ExBanking.create_user("Tommy")
+      ExBanking.create_user("Tanaka")
+      ExBanking.deposit("Tommy", 200.0, "USD")
+      assert ExBanking.send("Tommy", "Tanaka", 150, "USD") == {:ok, 50.0, 150.0}
+      assert ExBanking.send("Tanaka", "Tommy", 150, "USD") == {:ok, 0.0, 200.0}
+    end
+
+    test "it returns an error when the sender don't exist" do
+      ExBanking.create_user("Paul")
+
+      assert ExBanking.send("Santa Claus", "Paul", 100, "USD") ==
+               {:error, :sender_does_not_exist}
+    end
+
+    test "it returns an error when there is not enough money in the account" do
+      ExBanking.create_user("Adam")
+      ExBanking.create_user("Eve")
+      assert ExBanking.send("Adam", "Eve", 100.0, "USD") == {:error, :not_enough_money}
+    end
+  end
 end

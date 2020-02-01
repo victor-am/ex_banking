@@ -30,7 +30,7 @@ defmodule AccountServerTest do
 
     test "it returns an error when the process cannot be found" do
       assert AccountServer.call("Santa Claus", {:get_balance, "USD"}) ==
-               {:error, :process_not_found}
+               {:error, :process_not_found, :get_balance}
     end
 
     test "it returns an error when the process mailbox is already full" do
@@ -41,8 +41,8 @@ defmodule AccountServerTest do
         def info(_pid, :message_queue_len), do: {:message_queue_len, 10}
       end
 
-      assert AccountServer.call("Lin", {:get_balance, "USD"}, StubbedProcess) ==
-               {:error, :process_mailbox_is_full}
+      assert AccountServer.call("Lin", {:get_balance, "USD"}, false, StubbedProcess) ==
+               {:error, :process_mailbox_is_full, :get_balance}
     end
   end
 
@@ -75,7 +75,7 @@ defmodule AccountServerTest do
     test "it returns an error and keeps the balance when the user doesn't have enough money" do
       state = %{"USD" => 100}
       message = {:withdraw, 150, "USD"}
-      expected_response = {:reply, {:error, :not_enough_money}, %{"USD" => 100}}
+      expected_response = {:reply, {:error, :not_enough_money, :withdraw}, %{"USD" => 100}}
       assert AccountServer.handle_call(message, {}, state) == expected_response
     end
   end

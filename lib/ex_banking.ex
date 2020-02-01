@@ -123,4 +123,34 @@ defmodule ExBanking do
         {:error, message}
     end
   end
+
+  @doc """
+  Transfers an amount of money of a given currency from one user account to another.
+
+  Returns `{:ok, sender_balance, receiver_balance}`
+
+  ## Examples
+
+      iex> ExBanking.create_user("Jose")
+      ...> ExBanking.create_user("Amelia")
+      ...> ExBanking.deposit("Jose", 150.0, "USD")
+      ...> ExBanking.send("Jose", "Amelia", 50.0, "USD")
+      {:ok, 100.0, 50.0}
+
+  """
+  @spec send(
+          from_user :: String.t(),
+          to_user :: String.t(),
+          amount :: number,
+          currency :: String.t()
+        ) :: {:ok, from_user_balance :: number, to_user_balance :: number} | banking_error
+  def send(from_user, to_user, amount, currency) do
+    case Account.send(from_user, to_user, Money.to_integer(amount), currency) do
+      {:ok, from_user_balance, to_user_balance} ->
+        {:ok, Money.to_decimal(from_user_balance), Money.to_decimal(to_user_balance)}
+
+      {:error, message} ->
+        {:error, message}
+    end
+  end
 end

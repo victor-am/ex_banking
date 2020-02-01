@@ -35,7 +35,7 @@ defmodule ExBanking.AccountServer do
   Examples on the AccountServer.call function documentation.
   """
   @impl GenServer
-  def handle_call({:deposit, amount, currency}, _from, state) do
+  def handle_call({:deposit, amount, currency}, _from, state) when is_integer(amount) do
     balance = state[currency] || 0
     new_state = %{currency => balance + amount}
     {:reply, {:ok, new_state[currency]}, new_state}
@@ -46,7 +46,7 @@ defmodule ExBanking.AccountServer do
   Examples on the AccountServer.call function documentation.
   """
   @impl GenServer
-  def handle_call({:withdraw, amount, currency}, _from, state) do
+  def handle_call({:withdraw, amount, currency}, _from, state) when is_integer(amount) do
     balance = state[currency] || 0
     new_balance = balance - amount
 
@@ -54,7 +54,7 @@ defmodule ExBanking.AccountServer do
       new_state = Map.merge(state, %{currency => new_balance})
       {:reply, {:ok, new_state[currency]}, new_state}
     else
-      {:reply, {:error, :not_enough_money}, state}
+      {:reply, {:error, :not_enough_money, :withdraw}, state}
     end
   end
 
@@ -102,13 +102,19 @@ defmodule ExBanking.AccountServer do
       {:ok, 90}
 
   """
-  def call(user, action_options, process_module \\ Process) do
+  def call(user, action_options, skip_queue_limit \\ false, process_module \\ Process) do
     pid = process_id(user)
+    operation = elem(action_options, 0)
 
     cond do
-      !is_pid(pid) -> {:error, :process_not_found}
-      mailbox_full?(pid, process_module) -> {:error, :process_mailbox_is_full}
-      true -> GenServer.call(pid, action_options)
+      !is_pid(pid) ->
+        {:error, :process_not_found, operation}
+
+      !skip_queue_limit && mailbox_full?(pid, process_module) ->
+        {:error, :process_mailbox_is_full, operation}
+
+      true ->
+        GenServer.call(pid, action_options)
     end
   end
 

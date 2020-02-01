@@ -49,8 +49,8 @@ defmodule ExBanking.Account do
   def get_balance(user, currency, account_server_module \\ AccountServer) do
     case account_server_module.call(user, {:get_balance, currency}) do
       {:ok, balance} -> {:ok, balance}
-      {:error, :process_not_found} -> {:error, :user_does_not_exist}
-      {:error, :process_mailbox_is_full} -> {:error, :too_many_requests_to_user}
+      {:error, :process_not_found, _} -> {:error, :user_does_not_exist}
+      {:error, :process_mailbox_is_full, _} -> {:error, :too_many_requests_to_user}
     end
   end
 
@@ -72,8 +72,8 @@ defmodule ExBanking.Account do
   def deposit(user, amount, currency, account_server_module \\ AccountServer) do
     case account_server_module.call(user, {:deposit, amount, currency}) do
       {:ok, balance} -> {:ok, balance}
-      {:error, :process_not_found} -> {:error, :user_does_not_exist}
-      {:error, :process_mailbox_is_full} -> {:error, :too_many_requests_to_user}
+      {:error, :process_not_found, _} -> {:error, :user_does_not_exist}
+      {:error, :process_mailbox_is_full, _} -> {:error, :too_many_requests_to_user}
     end
   end
 
@@ -96,9 +96,52 @@ defmodule ExBanking.Account do
   def withdraw(user, amount, currency, account_server_module \\ AccountServer) do
     case account_server_module.call(user, {:withdraw, amount, currency}) do
       {:ok, balance} -> {:ok, balance}
-      {:error, :process_not_found} -> {:error, :user_does_not_exist}
-      {:error, :process_mailbox_is_full} -> {:error, :too_many_requests_to_user}
-      {:error, :not_enough_money} -> {:error, :not_enough_money}
+      {:error, :process_not_found, _} -> {:error, :user_does_not_exist}
+      {:error, :process_mailbox_is_full, _} -> {:error, :too_many_requests_to_user}
+      {:error, :not_enough_money, _} -> {:error, :not_enough_money}
+    end
+  end
+
+  @doc """
+  Transfers an amount of money of a given currency from one user account to another.
+
+  Returns `{:ok, sender_balance, receiver_balance}`
+
+  ## Examples
+
+      iex> Account.create_user("Denis")
+      ...> Account.create_user("Camila")
+      ...> Account.deposit("Denis", 150, "USD")
+      ...> Account.send("Denis", "Camila", 50, "USD")
+      {:ok, 100, 50}
+
+  """
+  def send(from_user, to_user, amount, currency, account_server_module \\ AccountServer) do
+    with {:ok, from_user_balance} <-
+           account_server_module.call(from_user, {:withdraw, amount, currency}),
+         {:ok, to_user_balance} <-
+           account_server_module.call(to_user, {:deposit, amount, currency}) do
+      {:ok, from_user_balance, to_user_balance}
+    else
+      {:error, :process_not_found, :withdraw} ->
+        {:error, :sender_does_not_exist}
+
+      {:error, :process_mailbox_is_full, :withdraw} ->
+        {:error, :too_many_requests_to_sender}
+
+      {:error, :not_enough_money, :withdraw} ->
+        {:error, :not_enough_money}
+
+      # When the operation fails in the deposit phase we should rollback the
+      # withdraw to avoid inconsistencies. The skip_queue_limit = true is important
+      # to allow the rollback operation to proceed even if the account queue is full.
+      {:error, :process_not_found, :deposit} ->
+        account_server_module.call(from_user, {:deposit, amount, currency}, true)
+        {:error, :receiver_does_not_exist}
+
+      {:error, :process_mailbox_is_full, :deposit} ->
+        account_server_module.call(from_user, {:deposit, amount, currency}, true)
+        {:error, :too_many_requests_to_receiver}
     end
   end
 end
