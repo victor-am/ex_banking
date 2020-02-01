@@ -123,6 +123,10 @@ defmodule ExBanking do
     end
   end
 
+  @doc """
+  Those functions are used to convert money between integer and 2 decimal places float formats.
+  More information about this implementation choice on the README.
+  """
   defp money_to_decimal(integer_amount) do
     integer_amount / 100
   end
