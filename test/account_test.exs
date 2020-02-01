@@ -17,11 +17,21 @@ defmodule AccountTest do
   describe "get_balance/2" do
     test "it returns the balance of the given user" do
       Account.create_user("Sarah")
-      assert Account.get_balance("Sarah", "USD") == {:ok, 0.0}
+      assert Account.get_balance("Sarah", "USD") == {:ok, 0}
     end
 
     test "it returns an error when the user don't exist" do
       assert Account.get_balance("Santa Claus", "USD") == {:error, :user_does_not_exist}
+    end
+
+    test "it returns an error when the account operation queue is full" do
+      # This simulates a :process_mailbox_is_full error
+      defmodule AccountServerStub do
+        def call(_user, {:get_balance, "USD"}), do: {:error, :process_mailbox_is_full}
+      end
+
+      assert Account.get_balance("Yara", "USD", AccountServerStub) ==
+               {:error, :too_many_requests_to_user}
     end
   end
 
@@ -33,6 +43,16 @@ defmodule AccountTest do
 
     test "it returns an error when the user don't exist" do
       assert Account.deposit("Santa Claus", 10000, "USD") == {:error, :user_does_not_exist}
+    end
+
+    test "it returns an error when the account operation queue is full" do
+      # This simulates a :process_mailbox_is_full error
+      defmodule AccountServerStub do
+        def call(_user, {:deposit, 100, "USD"}), do: {:error, :process_mailbox_is_full}
+      end
+
+      assert Account.deposit("Yara", 100, "USD", AccountServerStub) ==
+               {:error, :too_many_requests_to_user}
     end
   end
 end

@@ -22,6 +22,30 @@ defmodule AccountServerTest do
     end
   end
 
+  describe "call/2" do
+    test "it dispatches a message to the user's AccountServer" do
+      AccountServer.spawn_account("Carlos")
+      assert {:ok, 0} = AccountServer.call("Carlos", {:get_balance, "USD"})
+    end
+
+    test "it returns an error when the process cannot be found" do
+      assert AccountServer.call("Santa Claus", {:get_balance, "USD"}) ==
+               {:error, :process_not_found}
+    end
+
+    test "it returns an error when the process mailbox is already full" do
+      AccountServer.spawn_account("Lin")
+
+      # This simulates a queue with 10 messages
+      defmodule StubbedProcess do
+        def info(_pid, :message_queue_len), do: {:message_queue_len, 10}
+      end
+
+      assert AccountServer.call("Lin", {:get_balance, "USD"}, StubbedProcess) ==
+               {:error, :process_mailbox_is_full}
+    end
+  end
+
   describe "handle_call/2 => :get_balance" do
     test "it returns the balance of a user" do
       state = %{"USD" => 100}

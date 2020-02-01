@@ -8,6 +8,7 @@ defmodule ExBanking.AccountServer do
   """
   use GenServer
 
+  @process_mailbox_limit 10
   @initial_account_state %{"USD" => 0}
 
   def start_link(process_name) do
@@ -21,7 +22,7 @@ defmodule ExBanking.AccountServer do
 
   @doc """
   Callback from GenServer implementing the get_balance logic.
-  More information on the AccountServer.call function documentation.
+  Examples on the AccountServer.call function documentation.
   """
   @impl GenServer
   def handle_call({:get_balance, currency}, _from, state) do
@@ -31,7 +32,7 @@ defmodule ExBanking.AccountServer do
 
   @doc """
   Callback from GenServer implementing the deposit logic.
-  More information on the AccountServer.call function documentation.
+  Examples on the AccountServer.call function documentation.
   """
   @impl GenServer
   def handle_call({:deposit, amount, currency}, _from, state) do
@@ -79,14 +80,19 @@ defmodule ExBanking.AccountServer do
       {:ok, 100}
 
   """
-  def call(user, action_options) do
+  def call(user, action_options, process_module \\ Process) do
     pid = process_id(user)
 
-    if pid do
-      GenServer.call(pid, action_options)
-    else
-      {:error, :process_not_found}
+    cond do
+      !is_pid(pid) -> {:error, :process_not_found}
+      mailbox_full?(pid, process_module) -> {:error, :process_mailbox_is_full}
+      true -> GenServer.call(pid, action_options)
     end
+  end
+
+  defp mailbox_full?(pid, process_module \\ Process) do
+    {:message_queue_len, queue_size} = process_module.info(pid, :message_queue_len)
+    queue_size >= @process_mailbox_limit
   end
 
   defp process_id(user) do

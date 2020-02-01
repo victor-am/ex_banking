@@ -26,8 +26,8 @@ defmodule ExBanking.Account do
   """
   def create_user(user) do
     case AccountServer.spawn_account(user) do
-      {:error, {:already_started, _}} -> {:error, :user_already_exists}
       {:ok, _pid} -> :ok
+      {:error, {:already_started, _}} -> {:error, :user_already_exists}
     end
   end
 
@@ -46,10 +46,11 @@ defmodule ExBanking.Account do
       {:error, :user_does_not_exist}
 
   """
-  def get_balance(user, currency) do
-    case AccountServer.call(user, {:get_balance, currency}) do
+  def get_balance(user, currency, account_server_module \\ AccountServer) do
+    case account_server_module.call(user, {:get_balance, currency}) do
       {:ok, balance} -> {:ok, balance}
       {:error, :process_not_found} -> {:error, :user_does_not_exist}
+      {:error, :process_mailbox_is_full} -> {:error, :too_many_requests_to_user}
     end
   end
 
@@ -68,10 +69,11 @@ defmodule ExBanking.Account do
       {:error, :user_does_not_exist}
 
   """
-  def deposit(user, amount, currency) do
-    case AccountServer.call(user, {:deposit, amount, currency}) do
+  def deposit(user, amount, currency, account_server_module \\ AccountServer) do
+    case account_server_module.call(user, {:deposit, amount, currency}) do
       {:ok, balance} -> {:ok, balance}
       {:error, :process_not_found} -> {:error, :user_does_not_exist}
+      {:error, :process_mailbox_is_full} -> {:error, :too_many_requests_to_user}
     end
   end
 end
