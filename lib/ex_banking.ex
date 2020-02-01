@@ -7,6 +7,7 @@ defmodule ExBanking do
   methods instead of doing much on it's own.
   """
   alias ExBanking.Account
+  alias ExBanking.Money
 
   @type banking_error ::
           {:error,
@@ -61,7 +62,7 @@ defmodule ExBanking do
   def get_balance(user, currency) do
     case Account.get_balance(user, currency) do
       {:ok, balance} ->
-        {:ok, money_to_decimal(balance)}
+        {:ok, Money.to_decimal(balance)}
 
       {:error, message} ->
         {:error, message}
@@ -86,9 +87,9 @@ defmodule ExBanking do
   @spec deposit(user :: String.t(), amount :: number, currency :: String.t()) ::
           {:ok, new_balance :: number} | banking_error
   def deposit(user, amount, currency) do
-    case Account.deposit(user, money_to_integer(amount), currency) do
+    case Account.deposit(user, Money.to_integer(amount), currency) do
       {:ok, balance} ->
-        {:ok, money_to_decimal(balance)}
+        {:ok, Money.to_decimal(balance)}
 
       {:error, message} ->
         {:error, message}
@@ -114,30 +115,12 @@ defmodule ExBanking do
   @spec withdraw(user :: String.t(), amount :: number, currency :: String.t()) ::
           {:ok, new_balance :: number} | banking_error
   def withdraw(user, amount, currency) do
-    case Account.withdraw(user, money_to_integer(amount), currency) do
+    case Account.withdraw(user, Money.to_integer(amount), currency) do
       {:ok, balance} ->
-        {:ok, money_to_decimal(balance)}
+        {:ok, Money.to_decimal(balance)}
 
       {:error, message} ->
         {:error, message}
     end
-  end
-
-  @doc """
-  Those functions are used to convert money between integer and 2 decimal places float formats.
-  More information about this implementation choice on the README.
-  """
-  defp money_to_decimal(integer_amount) do
-    integer_amount / 100
-  end
-
-  defp money_to_integer(amount) when is_float(amount) do
-    amount
-    |> Kernel.*(100)
-    |> trunc()
-  end
-
-  defp money_to_integer(amount) when is_integer(amount) do
-    amount * 100
   end
 end
