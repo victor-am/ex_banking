@@ -138,7 +138,7 @@ defmodule AccountTest do
           do: {:error, :process_mailbox_is_full, :deposit}
 
         # Rollback after deposit failure
-        def call("Lily", {:deposit, 100, "USD"}, true),
+        def call("Lily", {:deposit, 100, "USD"}, skip_queue_limit: true),
           do: {:ok, 100}
       end
 

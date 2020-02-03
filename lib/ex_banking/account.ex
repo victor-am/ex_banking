@@ -138,11 +138,13 @@ defmodule ExBanking.Account do
       # withdraw to avoid inconsistencies. The skip_queue_limit = true is important
       # to allow the rollback operation to proceed even if the account queue is full.
       {:error, :process_not_found, :deposit} ->
-        account_server_module.call(from_user, {:deposit, amount, currency}, true)
+        account_server_module.call(from_user, {:deposit, amount, currency}, skip_queue_limit: true)
+
         {:error, :receiver_does_not_exist}
 
       {:error, :process_mailbox_is_full, :deposit} ->
-        account_server_module.call(from_user, {:deposit, amount, currency}, true)
+        account_server_module.call(from_user, {:deposit, amount, currency}, skip_queue_limit: true)
+
         {:error, :too_many_requests_to_receiver}
     end
   end

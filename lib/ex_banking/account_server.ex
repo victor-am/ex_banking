@@ -102,7 +102,10 @@ defmodule ExBanking.AccountServer do
       {:ok, 90}
 
   """
-  def call(user, action_options, skip_queue_limit \\ false) do
+  def call(user, action_options, options \\ []) when is_list(options) do
+    defaults = [skip_queue_limit: false]
+    options = Keyword.merge(defaults, options)
+
     pid = process_id(user)
     operation = elem(action_options, 0)
 
@@ -110,7 +113,7 @@ defmodule ExBanking.AccountServer do
       !is_pid(pid) ->
         {:error, :process_not_found, operation}
 
-      !skip_queue_limit && mailbox_full?(pid) ->
+      !options[:skip_queue_limit] && mailbox_full?(pid) ->
         {:error, :process_mailbox_is_full, operation}
 
       true ->
