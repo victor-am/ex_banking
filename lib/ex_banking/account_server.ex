@@ -35,7 +35,7 @@ defmodule ExBanking.AccountServer do
   Examples on the AccountServer.call function documentation.
   """
   @impl GenServer
-  def handle_call({:deposit, amount, currency}, _from, state) when is_integer(amount) do
+  def handle_call({:deposit, amount, currency}, _from, state) do
     balance = state[currency] || 0
     new_state = %{currency => balance + amount}
     {:reply, {:ok, new_state[currency]}, new_state}
@@ -46,7 +46,7 @@ defmodule ExBanking.AccountServer do
   Examples on the AccountServer.call function documentation.
   """
   @impl GenServer
-  def handle_call({:withdraw, amount, currency}, _from, state) when is_integer(amount) do
+  def handle_call({:withdraw, amount, currency}, _from, state) do
     balance = state[currency] || 0
     new_balance = balance - amount
 
@@ -102,7 +102,7 @@ defmodule ExBanking.AccountServer do
       {:ok, 90}
 
   """
-  def call(user, action_options, skip_queue_limit \\ false, process_module \\ Process) do
+  def call(user, action_options, skip_queue_limit \\ false) do
     pid = process_id(user)
     operation = elem(action_options, 0)
 
@@ -110,7 +110,7 @@ defmodule ExBanking.AccountServer do
       !is_pid(pid) ->
         {:error, :process_not_found, operation}
 
-      !skip_queue_limit && mailbox_full?(pid, process_module) ->
+      !skip_queue_limit && mailbox_full?(pid) ->
         {:error, :process_mailbox_is_full, operation}
 
       true ->
@@ -118,8 +118,9 @@ defmodule ExBanking.AccountServer do
     end
   end
 
-  defp mailbox_full?(pid, process_module \\ Process) do
-    {:message_queue_len, queue_size} = process_module.info(pid, :message_queue_len)
+  defp mailbox_full?(pid) do
+    process = Application.get_env(:ex_banking, :process_module, Process)
+    {:message_queue_len, queue_size} = process.info(pid, :message_queue_len)
     queue_size >= @process_mailbox_limit
   end
 

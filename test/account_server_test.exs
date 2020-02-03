@@ -41,8 +41,12 @@ defmodule AccountServerTest do
         def info(_pid, :message_queue_len), do: {:message_queue_len, 10}
       end
 
-      assert AccountServer.call("Lin", {:get_balance, "USD"}, false, StubbedProcess) ==
+      Application.put_env(:ex_banking, :process_module, StubbedProcess)
+
+      assert AccountServer.call("Lin", {:get_balance, "USD"}) ==
                {:error, :process_mailbox_is_full, :get_balance}
+
+      Application.delete_env(:ex_banking, :process_module)
     end
   end
 
