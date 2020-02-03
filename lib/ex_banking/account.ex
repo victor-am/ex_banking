@@ -135,8 +135,8 @@ defmodule ExBanking.Account do
         {:error, :not_enough_money}
 
       # When the operation fails in the deposit phase we should rollback the
-      # withdraw to avoid inconsistencies. The skip_queue_limit = true is important
-      # to allow the rollback operation to proceed even if the account queue is full.
+      # withdraw to avoid inconsistencies. The [skip_queue_limit: true] is important
+      # to allow the rollback operation to proceed even if the message queue is full.
       {:error, :process_not_found, :deposit} ->
         account_server_module.call(from_user, {:deposit, amount, currency}, skip_queue_limit: true)
 
