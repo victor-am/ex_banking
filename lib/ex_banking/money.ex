@@ -5,7 +5,7 @@ defmodule ExBanking.Money do
 
   More information about this implementation choice on the README.
   """
-  def to_decimal(integer_amount) do
+  def to_float(integer_amount) do
     integer_amount / 100
   end
 
