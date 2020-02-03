@@ -72,7 +72,7 @@ defmodule ExBanking do
   def get_balance(user, currency) do
     user
     |> Account.get_balance(currency)
-    |> convert_to_money_to_float
+    |> convert_money_to_float
   end
 
   @doc """
@@ -103,7 +103,7 @@ defmodule ExBanking do
   def deposit(user, amount, currency) do
     user
     |> Account.deposit(Money.to_integer(amount), currency)
-    |> convert_to_money_to_float
+    |> convert_money_to_float
   end
 
   @doc """
@@ -135,7 +135,7 @@ defmodule ExBanking do
   def withdraw(user, amount, currency) do
     user
     |> Account.withdraw(Money.to_integer(amount), currency)
-    |> convert_to_money_to_float
+    |> convert_money_to_float
   end
 
   @doc """
@@ -170,10 +170,10 @@ defmodule ExBanking do
   def send(from_user, to_user, amount, currency) do
     from_user
     |> Account.send(to_user, Money.to_integer(amount), currency)
-    |> convert_to_money_to_float
+    |> convert_money_to_float
   end
 
-  defp convert_to_money_to_float(response) do
+  defp convert_money_to_float(response) do
     case response do
       {:ok, amount} -> {:ok, Money.to_float(amount)}
       {:ok, amount_a, amount_b} -> {:ok, Money.to_float(amount_a), Money.to_float(amount_b)}
