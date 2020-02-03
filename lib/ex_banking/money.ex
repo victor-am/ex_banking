@@ -7,13 +7,9 @@ defmodule ExBanking.Money do
     integer_amount / 100
   end
 
-  def to_integer(amount) when is_float(amount) do
+  def to_integer(amount) do
     amount
     |> Kernel.*(100)
     |> trunc()
-  end
-
-  def to_integer(amount) when is_integer(amount) do
-    amount * 100
   end
 end
