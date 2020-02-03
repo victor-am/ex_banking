@@ -1,8 +1,9 @@
 defmodule ExBanking.Money do
   @moduledoc """
   The functions inside this module are used to convert money between integer and
-  2 decimal places float formats. More information about this implementation
-  choice on the README.
+  2 decimal places float formats.
+
+  More information about this implementation choice on the README.
   """
   def to_decimal(integer_amount) do
     integer_amount / 100

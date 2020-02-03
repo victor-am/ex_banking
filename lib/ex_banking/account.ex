@@ -104,6 +104,8 @@ defmodule ExBanking.Account do
 
   @doc """
   Transfers an amount of money of a given currency from one user account to another.
+  It basically runs a withdraw followed by a deposit, handling any rollback in case
+  a operation fails.
 
   Returns `{:ok, sender_balance, receiver_balance}`
 
