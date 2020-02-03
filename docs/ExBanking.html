@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.21.3">
+    <meta name="project" content="ex_banking v0.1.0">
+    <title>ExBanking — ex_banking v0.1.0</title>
+    <link rel="stylesheet" href="dist/elixir-0ab8a6a80ebaaa287431.css" />
+    <script src="dist/sidebar_items-93a111d194.js"></script>
+      <script src="docs_config.js"></script>
+    <script async src="dist/app-a225d03098e64fef431a.js"></script>
+  </head>
+  <body data-type="modules">
+    <script>try { if(localStorage.getItem('night-mode') === 'true') document.body.className += ' night-mode'; } catch (e) { }</script>
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button">
+      <span class="icon-search" aria-hidden="true"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button">
+      <span class="icon-cross" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" id="search-list" class="search-input" placeholder="Search..." aria-label="Search" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="ExBanking.html" class="sidebar-projectName">
+ex_banking      </a>
+      <h2 class="sidebar-projectVersion">
+        v0.1.0
+      </h2>
+    </div>
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+      <h1>
+        <small class="app-vsn">ex_banking v0.1.0</small>
+ExBanking      </h1>
+
+
+        <section id="moduledoc">
+<p>The ExBanking module serves as an entrypoint for the application, it&#39;s APIs
+are the only things meant to be directly exposed to the outside world.</p>
+<p>It&#39;s a very thin layer of the application, mostly just calling Account module
+methods instead of doing much on it&#39;s own.</p>
+        </section>
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:banking_error/0">banking_error()</a>
+  </div>
+</div>
+  </div>
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#create_user/1">create_user(user)</a>
+  </div>
+    <div class="summary-synopsis"><p>Creates a new user with a given name (case-sensitive string), unless there is
+already an user with the same name.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#deposit/3">deposit(user, amount, currency)</a>
+  </div>
+    <div class="summary-synopsis"><p>Adds the given amount of money from the given currency to the specified user account.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_balance/2">get_balance(user, currency)</a>
+  </div>
+    <div class="summary-synopsis"><p>Gets the current amount of money a user has on the given currency.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send/4">send(from_user, to_user, amount, currency)</a>
+  </div>
+    <div class="summary-synopsis"><p>Transfers an amount of money of a given currency from one user account to another.</p></div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#withdraw/3">withdraw(user, amount, currency)</a>
+  </div>
+    <div class="summary-synopsis"><p>Removes the given amount of money from the given currency from the specified user account.</p></div>
+</div>
+  </div>
+        </section>
+
+        <section id="types" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Types          </h1>
+          <div class="types-list">
+<section class="detail" id="t:banking_error/0">
+  <div class="detail-header">
+    <a href="#t:banking_error/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">banking_error()</h1>
+      <div class="specs">
+          <pre>banking_error() ::
+  {:error,
+   :wrong_arguments
+   | :user_already_exists
+   | :user_does_not_exist
+   | :not_enough_money
+   | :sender_does_not_exist
+   | :receiver_does_not_exist
+   | :too_many_requests_to_user
+   | :too_many_requests_to_sender
+   | :too_many_requests_to_receiver}</pre>
+      </div>
+  </div>
+  <section class="docstring">
+  </section>
+</section>
+          </div>
+        </section>
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions          </h1>
+          <div class="functions-list">
+<section class="detail" id="create_user/1">
+  <div class="detail-header">
+    <a href="#create_user/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">create_user(user)</h1>
+      <div class="specs">
+          <pre>create_user(user :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>()) :: :ok | <a href="#t:banking_error/0">banking_error</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Creates a new user with a given name (case-sensitive string), unless there is
+already an user with the same name.</p>
+<p>Returns <code class="inline">:ok</code></p>
+<h2 id="create_user/1-examples" class="section-heading">
+  <a href="#create_user/1-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Examples
+</h2>
+
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">create_user</span><span class="p" data-group-id="1296436668-1">(</span><span class="s">&quot;John&quot;</span><span class="p" data-group-id="1296436668-1">)</span><span class="w">
+</span><span class="ss">:ok</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">create_user</span><span class="p" data-group-id="1296436668-2">(</span><span class="s">&quot;Robert&quot;</span><span class="p" data-group-id="1296436668-2">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">create_user</span><span class="p" data-group-id="1296436668-3">(</span><span class="s">&quot;Robert&quot;</span><span class="p" data-group-id="1296436668-3">)</span><span class="w">
+</span><span class="p" data-group-id="1296436668-4">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:user_already_exists</span><span class="p" data-group-id="1296436668-4">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="deposit/3">
+  <div class="detail-header">
+    <a href="#deposit/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">deposit(user, amount, currency)</h1>
+      <div class="specs">
+          <pre>deposit(user :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>(), amount :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">number</a>(), currency :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>()) ::
+  {:ok, new_balance :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">number</a>()} | <a href="#t:banking_error/0">banking_error</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Adds the given amount of money from the given currency to the specified user account.</p>
+<p>Returns <code class="inline">{:ok, balance}</code></p>
+<h2 id="deposit/3-examples" class="section-heading">
+  <a href="#deposit/3-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Examples
+</h2>
+
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">create_user</span><span class="p" data-group-id="8844121636-1">(</span><span class="s">&quot;Evan&quot;</span><span class="p" data-group-id="8844121636-1">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">deposit</span><span class="p" data-group-id="8844121636-2">(</span><span class="s">&quot;Evan&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">10.42</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;USD&quot;</span><span class="p" data-group-id="8844121636-2">)</span><span class="w">
+</span><span class="p" data-group-id="8844121636-3">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="mf">10.42</span><span class="p" data-group-id="8844121636-3">}</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">deposit</span><span class="p" data-group-id="8844121636-4">(</span><span class="s">&quot;Santa Claus&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">10.50</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;USD&quot;</span><span class="p" data-group-id="8844121636-4">)</span><span class="w">
+</span><span class="p" data-group-id="8844121636-5">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:user_does_not_exist</span><span class="p" data-group-id="8844121636-5">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="get_balance/2">
+  <div class="detail-header">
+    <a href="#get_balance/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get_balance(user, currency)</h1>
+      <div class="specs">
+          <pre>get_balance(user :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>(), currency :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>()) ::
+  {:ok, balance :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">number</a>()} | <a href="#t:banking_error/0">banking_error</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Gets the current amount of money a user has on the given currency.</p>
+<p>Returns <code class="inline">{:ok, balance}</code></p>
+<h2 id="get_balance/2-examples" class="section-heading">
+  <a href="#get_balance/2-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Examples
+</h2>
+
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">create_user</span><span class="p" data-group-id="3291892449-1">(</span><span class="s">&quot;Elton&quot;</span><span class="p" data-group-id="3291892449-1">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">get_balance</span><span class="p" data-group-id="3291892449-2">(</span><span class="s">&quot;Elton&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;USD&quot;</span><span class="p" data-group-id="3291892449-2">)</span><span class="w">
+</span><span class="p" data-group-id="3291892449-3">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="mf">0.00</span><span class="p" data-group-id="3291892449-3">}</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">get_balance</span><span class="p" data-group-id="3291892449-4">(</span><span class="s">&quot;Santa Claus&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;USD&quot;</span><span class="p" data-group-id="3291892449-4">)</span><span class="w">
+</span><span class="p" data-group-id="3291892449-5">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:user_does_not_exist</span><span class="p" data-group-id="3291892449-5">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="send/4">
+  <div class="detail-header">
+    <a href="#send/4" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">send(from_user, to_user, amount, currency)</h1>
+      <div class="specs">
+          <pre>send(
+  from_user :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>(),
+  to_user :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>(),
+  amount :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">number</a>(),
+  currency :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>()
+) ::
+  {:ok, from_user_balance :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">number</a>(), to_user_balance :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">number</a>()}
+  | <a href="#t:banking_error/0">banking_error</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Transfers an amount of money of a given currency from one user account to another.</p>
+<p>Returns <code class="inline">{:ok, sender_balance, receiver_balance}</code></p>
+<h2 id="send/4-examples" class="section-heading">
+  <a href="#send/4-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Examples
+</h2>
+
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">create_user</span><span class="p" data-group-id="0992799272-1">(</span><span class="s">&quot;Jose&quot;</span><span class="p" data-group-id="0992799272-1">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">create_user</span><span class="p" data-group-id="0992799272-2">(</span><span class="s">&quot;Amelia&quot;</span><span class="p" data-group-id="0992799272-2">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">deposit</span><span class="p" data-group-id="0992799272-3">(</span><span class="s">&quot;Jose&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">150.0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;USD&quot;</span><span class="p" data-group-id="0992799272-3">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">send</span><span class="p" data-group-id="0992799272-4">(</span><span class="s">&quot;Jose&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Amelia&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">50.0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;USD&quot;</span><span class="p" data-group-id="0992799272-4">)</span><span class="w">
+</span><span class="p" data-group-id="0992799272-5">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="mf">100.0</span><span class="p">,</span><span class="w"> </span><span class="mf">50.0</span><span class="p" data-group-id="0992799272-5">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="withdraw/3">
+  <div class="detail-header">
+    <a href="#withdraw/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">withdraw(user, amount, currency)</h1>
+      <div class="specs">
+          <pre>withdraw(user :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>(), amount :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">number</a>(), currency :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>()) ::
+  {:ok, new_balance :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">number</a>()} | <a href="#t:banking_error/0">banking_error</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Removes the given amount of money from the given currency from the specified user account.</p>
+<p>Returns <code class="inline">{:ok, balance}</code></p>
+<h2 id="withdraw/3-examples" class="section-heading">
+  <a href="#withdraw/3-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Examples
+</h2>
+
+<pre><code class="nohighlight makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">create_user</span><span class="p" data-group-id="1406748519-1">(</span><span class="s">&quot;Terry&quot;</span><span class="p" data-group-id="1406748519-1">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">deposit</span><span class="p" data-group-id="1406748519-2">(</span><span class="s">&quot;Terry&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">150.50</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;USD&quot;</span><span class="p" data-group-id="1406748519-2">)</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">withdraw</span><span class="p" data-group-id="1406748519-3">(</span><span class="s">&quot;Terry&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">25.50</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;USD&quot;</span><span class="p" data-group-id="1406748519-3">)</span><span class="w">
+</span><span class="p" data-group-id="1406748519-4">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="mf">125.0</span><span class="p" data-group-id="1406748519-4">}</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">ExBanking</span><span class="o">.</span><span class="n">withdraw</span><span class="p" data-group-id="1406748519-5">(</span><span class="s">&quot;Santa Claus&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">10.50</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;USD&quot;</span><span class="p" data-group-id="1406748519-5">)</span><span class="w">
+</span><span class="p" data-group-id="1406748519-6">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:user_does_not_exist</span><span class="p" data-group-id="1406748519-6">}</span></code></pre>
+  </section>
+</section>
+          </div>
+        </section>
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.21.3),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
+          </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  </body>
+</html>
