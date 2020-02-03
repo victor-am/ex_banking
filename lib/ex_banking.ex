@@ -38,7 +38,7 @@ defmodule ExBanking do
 
   """
   @spec create_user(user :: String.t()) :: :ok | banking_error
-  def create_user(user) do
+  def create_user(user) when is_binary(user) do
     Account.create_user(user)
   end
 
@@ -59,7 +59,9 @@ defmodule ExBanking do
   """
   @spec get_balance(user :: String.t(), currency :: String.t()) ::
           {:ok, balance :: number} | banking_error
-  def get_balance(user, currency) do
+  def get_balance(user, currency)
+      when is_binary(user)
+      when is_binary(currency) do
     case Account.get_balance(user, currency) do
       {:ok, balance} ->
         {:ok, Money.to_decimal(balance)}
@@ -86,7 +88,10 @@ defmodule ExBanking do
   """
   @spec deposit(user :: String.t(), amount :: number, currency :: String.t()) ::
           {:ok, new_balance :: number} | banking_error
-  def deposit(user, amount, currency) do
+  def deposit(user, amount, currency)
+      when is_binary(user)
+      when is_number(amount)
+      when is_binary(currency) do
     case Account.deposit(user, Money.to_integer(amount), currency) do
       {:ok, balance} ->
         {:ok, Money.to_decimal(balance)}
@@ -114,7 +119,10 @@ defmodule ExBanking do
   """
   @spec withdraw(user :: String.t(), amount :: number, currency :: String.t()) ::
           {:ok, new_balance :: number} | banking_error
-  def withdraw(user, amount, currency) do
+  def withdraw(user, amount, currency)
+      when is_binary(user)
+      when is_number(amount)
+      when is_binary(currency) do
     case Account.withdraw(user, Money.to_integer(amount), currency) do
       {:ok, balance} ->
         {:ok, Money.to_decimal(balance)}
@@ -144,7 +152,11 @@ defmodule ExBanking do
           amount :: number,
           currency :: String.t()
         ) :: {:ok, from_user_balance :: number, to_user_balance :: number} | banking_error
-  def send(from_user, to_user, amount, currency) do
+  def send(from_user, to_user, amount, currency)
+      when is_binary(from_user)
+      when is_binary(to_user)
+      when is_number(amount)
+      when is_binary(currency) do
     case Account.send(from_user, to_user, Money.to_integer(amount), currency) do
       {:ok, from_user_balance, to_user_balance} ->
         {:ok, Money.to_decimal(from_user_balance), Money.to_decimal(to_user_balance)}
