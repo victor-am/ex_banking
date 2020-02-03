@@ -37,13 +37,13 @@ defmodule ExBanking do
       {:error, :user_already_exists}
 
   """
+  def create_user(user) when not is_binary(user) do
+    {:error, :wrong_arguments}
+  end
+
   @spec create_user(user :: String.t()) :: :ok | banking_error
   def create_user(user) do
-    with true <- is_binary(user) do
-      Account.create_user(user)
-    else
-      false -> {:error, :wrong_arguments}
-    end
+    Account.create_user(user)
   end
 
   @doc """
@@ -61,17 +61,18 @@ defmodule ExBanking do
       {:error, :user_does_not_exist}
 
   """
+  def get_balance(user, currency)
+      when not is_binary(user)
+      when not is_binary(currency) do
+    {:error, :wrong_arguments}
+  end
+
   @spec get_balance(user :: String.t(), currency :: String.t()) ::
           {:ok, balance :: number} | banking_error
   def get_balance(user, currency) do
-    with true <- is_binary(user),
-         true <- is_binary(currency) do
-      user
-      |> Account.get_balance(currency)
-      |> convert_to_money_to_float
-    else
-      false -> {:error, :wrong_arguments}
-    end
+    user
+    |> Account.get_balance(currency)
+    |> convert_to_money_to_float
   end
 
   @doc """
@@ -89,18 +90,20 @@ defmodule ExBanking do
       {:error, :user_does_not_exist}
 
   """
+  def deposit(user, amount, currency)
+      when not is_binary(user)
+      when not is_number(amount)
+      when not is_binary(currency)
+      when amount <= 0 do
+    {:error, :wrong_arguments}
+  end
+
   @spec deposit(user :: String.t(), amount :: number, currency :: String.t()) ::
           {:ok, new_balance :: number} | banking_error
   def deposit(user, amount, currency) do
-    with true <- is_binary(user),
-         true <- is_number(amount),
-         true <- is_binary(currency) do
-      user
-      |> Account.deposit(Money.to_integer(amount), currency)
-      |> convert_to_money_to_float
-    else
-      false -> {:error, :wrong_arguments}
-    end
+    user
+    |> Account.deposit(Money.to_integer(amount), currency)
+    |> convert_to_money_to_float
   end
 
   @doc """
@@ -119,18 +122,20 @@ defmodule ExBanking do
       {:error, :user_does_not_exist}
 
   """
+  def withdraw(user, amount, currency)
+      when not is_binary(user)
+      when not is_number(amount)
+      when not is_binary(currency)
+      when amount <= 0 do
+    {:error, :wrong_arguments}
+  end
+
   @spec withdraw(user :: String.t(), amount :: number, currency :: String.t()) ::
           {:ok, new_balance :: number} | banking_error
   def withdraw(user, amount, currency) do
-    with true <- is_binary(user),
-         true <- is_number(amount),
-         true <- is_binary(currency) do
-      user
-      |> Account.withdraw(Money.to_integer(amount), currency)
-      |> convert_to_money_to_float
-    else
-      false -> {:error, :wrong_arguments}
-    end
+    user
+    |> Account.withdraw(Money.to_integer(amount), currency)
+    |> convert_to_money_to_float
   end
 
   @doc """
@@ -147,6 +152,15 @@ defmodule ExBanking do
       {:ok, 100.0, 50.0}
 
   """
+  def send(from_user, to_user, amount, currency)
+      when not is_binary(from_user)
+      when not is_binary(to_user)
+      when not is_number(amount)
+      when not is_binary(currency)
+      when amount <= 0 do
+    {:error, :wrong_arguments}
+  end
+
   @spec send(
           from_user :: String.t(),
           to_user :: String.t(),
@@ -154,16 +168,9 @@ defmodule ExBanking do
           currency :: String.t()
         ) :: {:ok, from_user_balance :: number, to_user_balance :: number} | banking_error
   def send(from_user, to_user, amount, currency) do
-    with true <- is_binary(from_user),
-         true <- is_binary(to_user),
-         true <- is_number(amount),
-         true <- is_binary(currency) do
-      from_user
-      |> Account.send(to_user, Money.to_integer(amount), currency)
-      |> convert_to_money_to_float
-    else
-      false -> {:error, :wrong_arguments}
-    end
+    from_user
+    |> Account.send(to_user, Money.to_integer(amount), currency)
+    |> convert_to_money_to_float
   end
 
   defp convert_to_money_to_float(response) do

@@ -12,7 +12,7 @@ defmodule ExBankingTest do
       assert ExBanking.create_user("Theodore") == {:error, :user_already_exists}
     end
 
-    test "returns an error when the parameters are of invalid types" do
+    test "returns an error when the parameters are invalid" do
       assert ExBanking.create_user(1) == {:error, :wrong_arguments}
     end
   end
@@ -27,7 +27,7 @@ defmodule ExBankingTest do
       assert ExBanking.get_balance("Santa Claus", "USD") == {:error, :user_does_not_exist}
     end
 
-    test "returns an error when the parameters are of invalid types" do
+    test "returns an error when the parameters are invalid" do
       assert ExBanking.get_balance("Joe", 1) == {:error, :wrong_arguments}
       assert ExBanking.get_balance(1, "USD") == {:error, :wrong_arguments}
     end
@@ -44,10 +44,12 @@ defmodule ExBankingTest do
       assert ExBanking.deposit("Santa Claus", 100, "USD") == {:error, :user_does_not_exist}
     end
 
-    test "returns an error when the parameters are of invalid types" do
+    test "returns an error when the parameters are invalid" do
       assert ExBanking.deposit(1, 100, "USD") == {:error, :wrong_arguments}
       assert ExBanking.deposit("Joe", "string", "USD") == {:error, :wrong_arguments}
       assert ExBanking.deposit("Joe", 100, 1) == {:error, :wrong_arguments}
+      assert ExBanking.deposit("Joe", 0, "USD") == {:error, :wrong_arguments}
+      assert ExBanking.deposit("Joe", -1, "USD") == {:error, :wrong_arguments}
     end
   end
 
@@ -68,10 +70,12 @@ defmodule ExBankingTest do
       assert ExBanking.withdraw("Rie", 100.0, "USD") == {:error, :not_enough_money}
     end
 
-    test "returns an error when the parameters are of invalid types" do
+    test "returns an error when the parameters are invalid" do
       assert ExBanking.withdraw(1, 100, "USD") == {:error, :wrong_arguments}
       assert ExBanking.withdraw("Joe", "string", "USD") == {:error, :wrong_arguments}
       assert ExBanking.withdraw("Joe", 100, 1) == {:error, :wrong_arguments}
+      assert ExBanking.withdraw("Joe", 0, "USD") == {:error, :wrong_arguments}
+      assert ExBanking.withdraw("Joe", -1, "USD") == {:error, :wrong_arguments}
     end
   end
 
@@ -97,11 +101,13 @@ defmodule ExBankingTest do
       assert ExBanking.send("Adam", "Eve", 100.0, "USD") == {:error, :not_enough_money}
     end
 
-    test "returns an error when the parameters are of invalid types" do
+    test "returns an error when the parameters are invalid" do
       assert ExBanking.send(1, "Ted", 100, "USD") == {:error, :wrong_arguments}
       assert ExBanking.send("Joe", 1, 100, "USD") == {:error, :wrong_arguments}
       assert ExBanking.send("Joe", "Ted", "string", "USD") == {:error, :wrong_arguments}
       assert ExBanking.send("Joe", "Ted", 100, 1) == {:error, :wrong_arguments}
+      assert ExBanking.send("Joe", "Ted", 0, "USD") == {:error, :wrong_arguments}
+      assert ExBanking.send("Joe", "Ted", -1, "USD") == {:error, :wrong_arguments}
     end
   end
 end
