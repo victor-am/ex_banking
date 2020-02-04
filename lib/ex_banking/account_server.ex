@@ -131,7 +131,8 @@ defmodule ExBanking.AccountServer do
   end
 
   defp process_id(user) do
-    process_name(user)
+    user
+    |> process_name()
     |> Process.whereis()
   end
 
