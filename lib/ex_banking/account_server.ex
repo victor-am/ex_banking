@@ -75,6 +75,7 @@ defmodule ExBanking.AccountServer do
       true
 
   """
+  @spec spawn_account(user :: String.t()) :: {:ok, pid()} | {:error, {:already_started, pid()}}
   def spawn_account(user) do
     child_spec = {__MODULE__, process_name(user)}
     supervisor = ExBanking.AccountsSupervisor
@@ -102,6 +103,8 @@ defmodule ExBanking.AccountServer do
       {:ok, 90}
 
   """
+  @spec call(user :: String.t(), action_options :: tuple(), options :: list()) ::
+          {:ok, number()} | {:error, atom(), atom()}
   def call(user, action_options, options \\ []) when is_list(options) do
     defaults = [skip_queue_limit: false]
     options = Keyword.merge(defaults, options)

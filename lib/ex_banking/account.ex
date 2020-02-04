@@ -24,6 +24,7 @@ defmodule ExBanking.Account do
       {:error, :user_already_exists}
 
   """
+  @spec create_user(user :: String.t()) :: {:ok, pid()} | {:error, :user_already_exists}
   def create_user(user) do
     case AccountServer.spawn_account(user) do
       {:ok, _pid} -> :ok
@@ -46,6 +47,8 @@ defmodule ExBanking.Account do
       {:error, :user_does_not_exist}
 
   """
+  @spec get_balance(user :: String.t(), currency :: String.t(), account_server_module :: atom()) ::
+          {:ok, integer()} | {:error, atom()}
   def get_balance(user, currency, account_server_module \\ AccountServer) do
     case account_server_module.call(user, {:get_balance, currency}) do
       {:ok, balance} -> {:ok, balance}
@@ -69,6 +72,13 @@ defmodule ExBanking.Account do
       {:error, :user_does_not_exist}
 
   """
+  @spec deposit(
+          user :: String.t(),
+          amount :: integer(),
+          currency :: String.t(),
+          account_server_module :: atom()
+        ) ::
+          {:ok, integer()} | {:error, atom()}
   def deposit(user, amount, currency, account_server_module \\ AccountServer) do
     case account_server_module.call(user, {:deposit, amount, currency}) do
       {:ok, balance} -> {:ok, balance}
@@ -93,6 +103,13 @@ defmodule ExBanking.Account do
       {:error, :user_does_not_exist}
 
   """
+  @spec withdraw(
+          user :: String.t(),
+          amount :: integer(),
+          currency :: String.t(),
+          account_server_module :: atom()
+        ) ::
+          {:ok, integer()} | {:error, atom()}
   def withdraw(user, amount, currency, account_server_module \\ AccountServer) do
     case account_server_module.call(user, {:withdraw, amount, currency}) do
       {:ok, balance} -> {:ok, balance}
@@ -118,6 +135,14 @@ defmodule ExBanking.Account do
       {:ok, 100, 50}
 
   """
+  @spec send(
+          from_user :: String.t(),
+          to_user :: String.t(),
+          amount :: integer(),
+          currency :: String.t(),
+          account_server_module :: atom()
+        ) ::
+          {:ok, integer(), integer()} | {:error, atom()}
   def send(from_user, to_user, amount, currency, account_server_module \\ AccountServer) do
     with {:ok, from_user_balance} <-
            account_server_module.call(from_user, {:withdraw, amount, currency}),
